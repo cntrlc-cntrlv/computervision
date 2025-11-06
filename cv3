@@ -1,0 +1,52 @@
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 1. Read the input image
+image = cv2.imread('SF-25.jpg')  # Replace with your own image
+
+#Convert from BGR to RGB for displaying using matplotlib
+img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+
+# 2. Define 4 points on the original image (source points)
+# These should correspond to the corners of the object you want to "flatten"
+pts_src = np.float32([
+    [320, 15],   # top-left
+    [700, 215],  # top-right
+    [85, 610],   # bottom-left
+    [530, 780]   # bottom-right
+])
+
+
+# 3. Define corresponding points in the output image (destination points)
+# We'll map the above points to form a rectangular output
+pts_dst = np.float32([
+    [0, 0],
+    [400, 0],
+    [0, 600],
+    [400, 600]
+])
+
+
+# 4. Compute the Homography matrix
+H, status = cv2.findHomography(pts_src, pts_dst)
+print("Homography Matrix:\n", H)
+
+
+# 5. Apply perspective transformation using the Homography
+warped = cv2.warpPerspective(img, H, (400, 600))
+
+
+# 6. Display results
+plt.figure(figsize=(10, 5))
+plt.subplot(1, 2, 1)
+plt.imshow(img)
+plt.title("Original Image with Perspective")
+plt.axis('off')
+plt.subplot(1, 2, 2)
+plt.imshow(warped)
+plt.title("Perspective Corrected Image")
+plt.axis('off')
+plt.tight_layout()
+plt.show()
