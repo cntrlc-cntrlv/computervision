@@ -1,0 +1,53 @@
+# Import required libraries
+import cv2
+import matplotlib.pyplot as plt
+
+# 1. Read the image
+image = cv2.imread('SF-25.jpg')  # Replace with your image filename
+plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+plt.title("Original Image")
+plt.axis('off')
+
+
+
+# 3. Resize the image
+resized = cv2.resize(image, (200, 200))
+plt.subplot()
+plt.imshow(cv2.cvtColor(resized, cv2.COLOR_BGR2RGB))
+plt.title("Resized Image")
+plt.axis('off')
+
+
+
+# 4. Convert the image to grayscale
+gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+plt.subplot()
+plt.imshow(gray, cmap='gray')
+plt.title("Grayscale Image")
+plt.axis('off')
+
+
+
+# 5. Apply a Gaussian blur filter
+blurred = cv2.GaussianBlur(image, (9, 9), 0)
+plt.subplot()
+plt.imshow(cv2.cvtColor(blurred, cv2.COLOR_BGR2RGB))
+plt.title("Blurred Image")
+plt.axis('off')
+
+
+
+# 6. Edge detection using Canny filter
+edges = cv2.Canny(image, 100, 200)
+plt.subplot()
+plt.imshow(edges, cmap='gray')
+plt.title("Edge Detection")
+plt.axis('off')
+
+# 7. Save the processed image
+cv2.imwrite('gray_image.jpg', gray)
+cv2.imwrite('blurred_image.jpg', blurred)
+cv2.imwrite('edges_image.jpg', edges)
+plt.tight_layout()
+plt.show()
+print("✅ Images processed and saved successfully!")
