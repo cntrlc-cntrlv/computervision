@@ -1,0 +1,52 @@
+# Import required libraries
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 1. Read the input image
+image = cv2.imread('SF-25.jpg')  # Replace with your image filename
+
+# Convert BGR to RGB for displaying correctly in matplotlib
+img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+rows, cols = img.shape[:2]
+
+
+# --------- 1. Translation ---------
+# Shift image by 100 pixels right and 50 pixels down
+M_translate = np.float32([[1, 0, 100], [0, 1, 50]])
+translated = cv2.warpAffine(img, M_translate, (cols, rows))
+
+
+# --------- 2. Rotation ---------
+# Rotate image by 45 degrees around its center
+M_rotate = cv2.getRotationMatrix2D((cols / 2, rows / 2), 45, 1)
+rotated = cv2.warpAffine(img, M_rotate, (cols, rows))
+
+
+# --------- 3. Scaling ---------
+# Scale image by 0.5x (downsize)
+scaled = cv2.resize(img, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_LINEAR)
+
+
+# --------- 4. Reflection ---------
+# Flip image horizontally (1), vertically (0), or both (-1)
+reflected = cv2.flip(img, 1)  # Horizontal reflection
+
+
+# --------- 5. Shearing ---------
+# Shear along x-axis
+M_shear = np.float32([[1, 0.5, 0], [0, 1, 0]])
+sheared = cv2.warpAffine(img, M_shear, (int(cols * 1.5), rows))
+
+
+# --------- Display all results ---------
+titles = ['Original', 'Translated', 'Rotated', 'Scaled', 'Reflected', 'Sheared']
+images = [img, translated, rotated, scaled, reflected, sheared]
+plt.figure(figsize=(12, 8))
+for i in range(6):
+    plt.subplot(2, 3, i + 1)
+    plt.imshow(images[i])
+    plt.title(titles[i])
+    plt.axis('off')
+plt.tight_layout()
+plt.show()
